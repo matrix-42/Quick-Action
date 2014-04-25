@@ -19,6 +19,10 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private static final int CONTENT_VIEW = 3;
     private static final int DEGREES_180 = 180;
 
+    private static final String PARAM_STATUS_BAR_HEIGHT = "status_bar_height";
+    private static final String PARAM_DIMEN = "dimen";
+    private static final String PARAM_ANDROID = "android";
+
     private Context context;
     private Bitmap arrowDown;
     private Bitmap arrowUp;
@@ -199,8 +203,8 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         int y = calculateVerticalPosition(anchor, anchorRect, rootHeight, onTop, offsetTop, offsetBottom);
 
         arrowHorizontalPosition = anchorRect.centerX() - x;
-        showArrow(((onTop) ? ARROW_DOWN : ARROW_UP), arrowHorizontalPosition);
 
+        showArrow(((onTop) ? ARROW_DOWN : ARROW_UP), arrowHorizontalPosition);
         popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y);
     }
 
@@ -269,7 +273,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
 
     private int getStatusBarHeight() {
         int result = 0;
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        int resourceId = context.getResources().getIdentifier(PARAM_STATUS_BAR_HEIGHT, PARAM_DIMEN, PARAM_ANDROID);
         if (resourceId > 0) {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
