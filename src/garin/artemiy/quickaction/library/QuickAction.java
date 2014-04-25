@@ -7,6 +7,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.view.*;
 import android.widget.*;
+import garin.artemiy.quickaction.library.listeners.OnDismissListener;
+import garin.artemiy.quickaction.library.listeners.OnItemClickListener;
 
 /**
  * Author: Artemiy Garin
@@ -16,7 +18,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
 
     private static final int ARROW_DOWN = 1;
     private static final int ARROW_UP = 2;
-    private static final int CONTENT_VIEW = 3;
+    private static final int CONTENT_VIEW = android.R.id.content;
     private static final int DEGREES_180 = 180;
 
     private static final String PARAM_STATUS_BAR_HEIGHT = "status_bar_height";
@@ -29,6 +31,9 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private int popupBackgroundResource;
     private int textAppearanceStyle;
 
+    private OnDismissListener onDismissListener;
+    private OnItemClickListener onItemClickListener;
+
     private PopupWindow popupWindow;
     private WindowManager windowManager;
     private RelativeLayout rootLayout;
@@ -36,7 +41,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private ImageView arrowDownImageView;
     private LinearLayout contentLayout;
     private ScrollView scrollView;
-    private QuickActionOnDismissListener onDismissListener;
     private boolean isUseDefaultView;
 
     @SuppressWarnings("unused")
@@ -48,7 +52,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     @SuppressWarnings("unused")
     public QuickAction(Context context, int animationStyle, int arrowUpResource,
                        int popupBackgroundResource, RelativeLayout rootLayout) {
-        init(context, animationStyle, arrowUpResource, popupBackgroundResource, rootLayout, 0);
+        init(context, animationStyle, 0, popupBackgroundResource, rootLayout, arrowUpResource);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -60,14 +64,37 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         this.popupBackgroundResource = popupBackgroundResource;
         this.textAppearanceStyle = textAppearanceStyle;
 
+        initArrows();
+
         if (rootLayout == null)
             this.rootLayout = configureDefaultPopupView();
-        else
+        else {
             this.rootLayout = rootLayout;
+            this.rootLayout.addView(arrowUpImageView);
+            this.rootLayout.addView(arrowDownImageView);
+        }
 
         initPopupWindow(animationStyle);
 
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    }
+
+    private void initArrows() {
+        arrowDownImageView = new ImageView(context);
+        arrowDownImageView.setId(ARROW_DOWN);
+        arrowDownImageView.setImageBitmap(arrowDown);
+        RelativeLayout.LayoutParams arrowDownParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        arrowDownParams.addRule(RelativeLayout.BELOW, CONTENT_VIEW);
+        arrowDownImageView.setLayoutParams(arrowDownParams);
+
+        arrowUpImageView = new ImageView(context);
+        arrowUpImageView.setId(ARROW_UP);
+        arrowUpImageView.setImageBitmap(arrowUp);
+        arrowUpImageView.setLayoutParams(new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
     private void initPopupWindow(int animationStyle) {
@@ -97,22 +124,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
 
         RelativeLayout rootLayout = new RelativeLayout(context);
         rootLayout.setLayoutParams(new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        arrowDownImageView = new ImageView(context);
-        arrowDownImageView.setId(ARROW_DOWN);
-        arrowDownImageView.setImageBitmap(arrowDown);
-        RelativeLayout.LayoutParams arrowDownParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        arrowDownParams.addRule(RelativeLayout.BELOW, CONTENT_VIEW);
-        arrowDownImageView.setLayoutParams(arrowDownParams);
-
-        arrowUpImageView = new ImageView(context);
-        arrowUpImageView.setId(ARROW_UP);
-        arrowUpImageView.setImageBitmap(arrowUp);
-        arrowUpImageView.setLayoutParams(new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -148,7 +159,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         popupWindow.dismiss();
     }
 
-    public void addActionItem(QuickActionItem action) {
+    public void addActionItem(final QuickActionItem action) {
         if (isUseDefaultView) {
             TextView titleView = new TextView(context);
             titleView.setText(action.getTitle());
@@ -160,6 +171,13 @@ public class QuickAction implements PopupWindow.OnDismissListener {
             });
             titleView.setClickable(true);
             titleView.setTextAppearance(context, textAppearanceStyle);
+            titleView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null)
+                        onItemClickListener.onItemClick(action.getId());
+                }
+            });
 
             contentLayout.addView(titleView);
         } else {
@@ -206,11 +224,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
 
         showArrow(((onTop) ? ARROW_DOWN : ARROW_UP), arrowHorizontalPosition);
         popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y);
-    }
-
-    @SuppressWarnings("unused")
-    public void setOnDismissListener(QuickActionOnDismissListener onDismissListener) {
-        this.onDismissListener = onDismissListener;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -283,6 +296,19 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     @Override
     public void onDismiss() {
         if (onDismissListener != null) onDismissListener.onDismiss();
+    }
+
+    /**
+     * Listeners
+     */
+    @SuppressWarnings("unused")
+    public void setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
+
+    @SuppressWarnings("unused")
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
 }
