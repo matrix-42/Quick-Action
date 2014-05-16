@@ -18,7 +18,7 @@ You may import src from project (need delete example folder) or <a href="https:/
     }
 ```
 
-**That's all!**, after that you need call **defaultQuickAction.show(view)**.
+**That's all!**, after that you need call **defaultQuickAction.show(view)**. Where view — anchor where popup will be showed. Example resources you can find <a href="https://github.com/kvirair/Quick-Action/tree/master/res">here</a>.
 
 <h2>Custom layout</h2>
 ```java
@@ -27,7 +27,9 @@ You may import src from project (need delete example folder) or <a href="https:/
         super.onCreate(savedInstanceState);
         ...
 
-        RelativeLayout customLayout = (RelativeLayout) getLayoutInflater().inflate(R.layout.popup_custom_layout, null);
+        RelativeLayout customLayout = (RelativeLayout) getLayoutInflater().
+                inflate(R.layout.popup_custom_layout, null);
+
         customQuickAction = new QuickAction(this, R.style.PopupAnimation, R.drawable.icon_arrow_up,
                 R.drawable.popup_background, customLayout);
     }
