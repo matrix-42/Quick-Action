@@ -37,7 +37,37 @@ View — anchor where popup will be showed. Example resources you can find <a hr
     }
 ```
 
-In this case you also call **customQuickAction.show(view)**.
+In this case you also call **customQuickAction.show(view)**. XML example:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:id="@android:id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="UselessParent">
+
+        <TextView
+                style="@style/DefaultTextStyle"
+                android:background="@drawable/popup_background"
+                android:gravity="center"
+                android:drawableTop="@drawable/icon"
+                android:text="@string/app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
+```
+
+**Important** part is set id, **android:id="@android:id/content"**, in this easy case, you also can set this id to TextView.
 
 <h2>Listeners</h2>
 
