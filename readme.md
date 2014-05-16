@@ -49,13 +49,13 @@ In this case you also call **customQuickAction.show(view)**. XML example:
 
     <LinearLayout
             android:id="@android:id/content"
+            android:background="@drawable/popup_background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:ignore="UselessParent">
 
         <TextView
                 style="@style/DefaultTextStyle"
-                android:background="@drawable/popup_background"
                 android:gravity="center"
                 android:drawableTop="@drawable/icon"
                 android:text="@string/app_name"
