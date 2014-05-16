@@ -72,6 +72,9 @@ public class QuickAction implements PopupWindow.OnDismissListener {
             this.rootLayout = rootLayout;
             this.rootLayout.addView(arrowUpImageView);
             this.rootLayout.addView(arrowDownImageView);
+            rootLayout.setLayoutParams(new RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
         initPopupWindow(animationStyle);
@@ -195,7 +198,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         Rect anchorRect = new Rect(location[0], location[1],
                 location[0] + anchor.getWidth(), location[1] + anchor.getHeight());
 
-        rootLayout.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        rootLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
         int rootHeight = rootLayout.getMeasuredHeight();
         int rootWidth = rootLayout.getMeasuredWidth();

@@ -18,7 +18,7 @@ You may import src from project (need delete example folder) or <a href="https:/
     }
 ```
 
-**That's all!**, after that you need call **defaultQuickAction.show(view)**. Where view — anchor where popup will be showed. Example resources you can find <a href="https://github.com/kvirair/Quick-Action/tree/master/res">here</a>.
+**That's all!**, after that you need call **defaultQuickAction.show(view)**. View — anchor where popup will be showed. Example resources you can find <a href="https://github.com/kvirair/Quick-Action/tree/master/res">here</a>.
 
 <h2>Custom layout</h2>
 ```java
