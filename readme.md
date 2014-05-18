@@ -1,5 +1,5 @@
 <h3>Version — 1.0</h3>
-<h3>Minimum SDK — 2.1+</h3>
+<h3>Minimum SDK — 2.2+</h3>
 
 <h2>Install</h2>
 You may import src from project (need delete example folder) or <a href="https://github.com/kvirair/Quick-Action/releases">download jar</a> (recommended)
@@ -14,7 +14,7 @@ You may import src from project (need delete example folder) or <a href="https:/
         defaultQuickAction = new QuickAction(this, R.style.PopupAnimation, R.style.DefaultTextStyle,
                 R.drawable.icon_arrow_up, R.drawable.popup_background); // popup resources
 
-        defaultQuickAction.addActionItem(new QuickActionItem(1,"Text")); // id and element title
+        defaultQuickAction.addActionItem(new QuickActionItem(1, "Text")); // id and element title
     }
 ```
 
@@ -67,7 +67,7 @@ In this case you also call **customQuickAction.show(view)**. XML example:
 </RelativeLayout>
 ```
 
-**Important** part is set id, **android:id="@android:id/content"**, in this easy case, you also can set this id to TextView.
+**Important** part is set id, **android:id="@android:id/content"**, in this easy case, you also can set this id to TextView. And remove relative layout.
 
 <h2>Listeners</h2>
 
