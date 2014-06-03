@@ -24,6 +24,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private static final String PARAM_STATUS_BAR_HEIGHT = "status_bar_height";
     private static final String PARAM_DIMEN = "dimen";
     private static final String PARAM_ANDROID = "android";
+    private static final float PADDING = 8;
 
     private Context context;
     private Bitmap arrowDown;
@@ -42,6 +43,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private LinearLayout contentLayout;
     private ScrollView scrollView;
     private boolean isUseDefaultView;
+    private int padding;
 
     @SuppressWarnings("unused")
     public QuickAction(Context context, int animationStyle, int textAppearanceStyle, int arrowUpResource,
@@ -66,9 +68,10 @@ public class QuickAction implements PopupWindow.OnDismissListener {
 
         initArrows();
 
-        if (rootLayout == null)
+        if (rootLayout == null) {
+            this.padding = (int) (PADDING / context.getResources().getDisplayMetrics().density);
             this.rootLayout = configureDefaultPopupView();
-        else {
+        } else {
             this.rootLayout = rootLayout;
             this.rootLayout.addView(arrowUpImageView);
             this.rootLayout.addView(arrowDownImageView);
@@ -129,6 +132,8 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         rootLayout.setLayoutParams(new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        rootLayout.setPadding(padding / 2, padding, padding / 2, padding);
 
         contentLayout = new LinearLayout(context);
         contentLayout.setOrientation(LinearLayout.VERTICAL);
