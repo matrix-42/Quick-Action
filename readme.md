@@ -2,7 +2,7 @@
 <h3>Minimum SDK — 2.2+</h3>
 
 <h2>Screenshot</h2>
-
+![alt tag](http://i62.tinypic.com/2pr7ewm.png)
 
 <h2>Install</h2>
 You may import src from project (need delete example folder) or <a href="https://github.com/kvirair/Quick-Action/releases">download jar</a> (recommended)
