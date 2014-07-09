@@ -1,6 +1,9 @@
 <h3>Version — 1.0</h3>
 <h3>Minimum SDK — 2.2+</h3>
 
+<h2>Screenshot</h2>
+
+
 <h2>Install</h2>
 You may import src from project (need delete example folder) or <a href="https://github.com/kvirair/Quick-Action/releases">download jar</a> (recommended)
 
@@ -70,5 +73,4 @@ In this case you also call **customQuickAction.show(view)**. XML example:
 **Important** part is set id, **android:id="@android:id/content"**, in this easy case, you also can set this id to TextView. And remove relative layout.
 
 <h2>Listeners</h2>
-
-<h2>Screenshot</h2>
+Use OnItemClickListener and OnDismissListener on QuickAction class.
