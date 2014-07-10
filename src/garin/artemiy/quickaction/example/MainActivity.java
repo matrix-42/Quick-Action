@@ -1,5 +1,6 @@
 package garin.artemiy.quickaction.example;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +27,8 @@ public class MainActivity extends Activity {
         defaultQuickAction = new QuickAction(this, R.style.PopupAnimation, R.style.DefaultTextStyle,
                 R.drawable.icon_arrow_up, R.drawable.popup_background);
 
-        RelativeLayout customLayout = (RelativeLayout) getLayoutInflater().inflate(R.layout.popup_custom_layout, null);
+        @SuppressLint("InflateParams") RelativeLayout customLayout =
+                (RelativeLayout) getLayoutInflater().inflate(R.layout.popup_custom_layout, null);
         customQuickAction = new QuickAction(this, R.style.PopupAnimation, R.drawable.icon_arrow_up,
                 R.drawable.popup_background, customLayout);
 
