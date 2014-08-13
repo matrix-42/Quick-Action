@@ -73,4 +73,16 @@ In this case you also call **customQuickAction.show(view)**. XML example:
 **Important** part is set id, **android:id="@android:id/content"**, in this easy case, you also can set this id to TextView. And remove relative layout.
 
 <h2>Listeners</h2>
-Use OnItemClickListener and OnDismissListener on QuickAction class.
+Use OnItemClickListener and OnDismissListener on QuickAction class. For example:
+
+```java
+quickAction.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int id) {
+                // your code
+            }
+        });
+```
+
+<h2>Additional methods</h2>
+**setMaxHeightResource** — example: setMaxHeightResource(R.dimen.popup_max_height);
