@@ -29,6 +29,8 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private Context context;
     private Bitmap arrowDown;
     private Bitmap arrowUp;
+    private int screenWidth;
+    private int screenHeight;
     private int popupBackgroundResource;
     private int textAppearanceStyle;
 
@@ -67,6 +69,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         this.textAppearanceStyle = textAppearanceStyle;
 
         initArrows();
+        initScreen();
 
         if (rootLayout == null) {
             this.padding = (int) (PADDING_DP * context.getResources().getDisplayMetrics().density);
@@ -85,6 +88,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     }
 
+    @SuppressWarnings("ResourceType")
     private void initArrows() {
         arrowDownImageView = new ImageView(context);
         arrowDownImageView.setId(ARROW_DOWN);
@@ -101,6 +105,20 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         arrowUpImageView.setLayoutParams(new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    @SuppressWarnings("deprecation")
+    private void initScreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            Display display = windowManager.getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            screenWidth = size.x;
+            screenHeight = size.y;
+        } else {
+            screenWidth = windowManager.getDefaultDisplay().getWidth();
+            screenHeight = windowManager.getDefaultDisplay().getHeight();
+        }
     }
 
     private void initPopupWindow(int animationStyle) {
@@ -193,11 +211,9 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public void show(View anchor) {
         int arrowHorizontalPosition;
         int[] location = new int[2];
-
         anchor.getLocationOnScreen(location);
 
         Rect anchorRect = new Rect(location[0], location[1],
@@ -207,20 +223,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
 
         int rootHeight = rootLayout.getMeasuredHeight();
         int rootWidth = rootLayout.getMeasuredWidth();
-
-        int screenWidth;
-        int screenHeight;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            Display display = windowManager.getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            screenWidth = size.x;
-            screenHeight = size.y;
-        } else {
-            screenWidth = windowManager.getDefaultDisplay().getWidth();
-            screenHeight = windowManager.getDefaultDisplay().getHeight();
-        }
-
         int offsetTop = anchorRect.top;
         int offsetBottom = screenHeight - anchorRect.bottom;
         boolean onTop = offsetTop > offsetBottom;
@@ -239,16 +241,13 @@ public class QuickAction implements PopupWindow.OnDismissListener {
                                           boolean onTop, int offsetTop, int offsetBottom) {
         int y;
 
-        if (onTop) {
-
+        if (onTop)
             if (rootHeight > offsetTop) {
                 scrollView.getLayoutParams().height = offsetTop - anchor.getHeight();
                 y = getStatusBarHeight();
             } else y = anchorRect.top - rootHeight;
-
-        } else {
+        else {
             y = anchorRect.bottom;
-
             if (rootHeight > offsetBottom) scrollView.getLayoutParams().height = offsetBottom;
         }
 
@@ -262,7 +261,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         if ((anchorRect.left + rootWidth) > screenWidth) {
             x = anchorRect.left - (rootWidth - anchor.getWidth());
             if (x < 0) x = 0;
-
         } else {
             if (anchor.getWidth() > rootWidth) x = anchorRect.centerX() - (rootWidth / 2);
             else x = anchorRect.left;
@@ -295,9 +293,8 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private int getStatusBarHeight() {
         int result = 0;
         int resourceId = context.getResources().getIdentifier(PARAM_STATUS_BAR_HEIGHT, PARAM_DIMEN, PARAM_ANDROID);
-        if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId);
-        }
+        if (resourceId > 0) result = context.getResources().getDimensionPixelSize(resourceId);
+
         return result;
     }
 
