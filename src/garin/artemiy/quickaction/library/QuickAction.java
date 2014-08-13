@@ -68,6 +68,8 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         this.popupBackgroundResource = popupBackgroundResource;
         this.textAppearanceStyle = textAppearanceStyle;
 
+        windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+
         initArrows();
         initScreen();
 
@@ -84,8 +86,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         }
 
         initPopupWindow(animationStyle);
-
-        windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     }
 
     @SuppressWarnings("ResourceType")
@@ -200,8 +200,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
             titleView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (onItemClickListener != null)
-                        onItemClickListener.onItemClick(action.getId());
+                    if (onItemClickListener != null) onItemClickListener.onItemClick(action.getId());
                 }
             });
 
@@ -273,7 +272,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private void showArrow(int arrowDirection, int horizontalPosition) {
         View showArrow = (arrowDirection == ARROW_UP) ? arrowUpImageView : arrowDownImageView;
         View hideArrow = (arrowDirection == ARROW_UP) ? arrowDownImageView : arrowUpImageView;
-
         int arrowWidth = arrowUpImageView.getMeasuredWidth();
 
         showArrow.setVisibility(View.VISIBLE);

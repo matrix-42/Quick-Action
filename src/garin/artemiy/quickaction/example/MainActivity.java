@@ -13,9 +13,6 @@ import java.util.UUID;
 
 public class MainActivity extends Activity {
 
-    private static final int ITEM_1 = 1;
-    private static final int ITEM_2 = 2;
-    private static final int ITEM_3 = 3;
     private QuickAction defaultQuickAction;
     private QuickAction customQuickAction;
 
@@ -32,9 +29,16 @@ public class MainActivity extends Activity {
         customQuickAction = new QuickAction(this, R.style.PopupAnimation, R.drawable.icon_arrow_up,
                 R.drawable.popup_background, customLayout);
 
-        defaultQuickAction.addActionItem(new QuickActionItem(ITEM_1, UUID.randomUUID().toString()));
-        defaultQuickAction.addActionItem(new QuickActionItem(ITEM_2, UUID.randomUUID().toString()));
-        defaultQuickAction.addActionItem(new QuickActionItem(ITEM_3, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(1, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(2, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(3, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(4, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(5, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(6, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(7, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(8, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(9, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(10, UUID.randomUUID().toString()));
     }
 
     @SuppressWarnings("unused")
