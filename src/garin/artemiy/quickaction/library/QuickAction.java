@@ -33,6 +33,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private int screenHeight;
     private int popupBackgroundResource;
     private int textAppearanceStyle;
+    private int padding;
 
     private OnDismissListener onDismissListener;
     private OnItemClickListener onItemClickListener;
@@ -45,7 +46,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private LinearLayout contentLayout;
     private ScrollView scrollView;
     private boolean isUseDefaultView;
-    private int padding;
 
     @SuppressWarnings("unused")
     public QuickAction(Context context, int animationStyle, int textAppearanceStyle, int arrowUpResource,
@@ -195,6 +195,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
                     dismiss();
                 }
             });
+            titleView.setPadding(0, padding, 0, padding);
             titleView.setClickable(true);
             titleView.setTextAppearance(context, textAppearanceStyle);
             titleView.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +212,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     }
 
     public void show(View anchor) {
-        int arrowHorizontalPosition;
         int[] location = new int[2];
         anchor.getLocationOnScreen(location);
 
@@ -229,9 +229,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         int x = calculateHorizontalPosition(anchor, anchorRect, rootWidth, screenWidth);
         int y = calculateVerticalPosition(anchor, anchorRect, rootHeight, onTop, offsetTop, offsetBottom);
 
-        arrowHorizontalPosition = anchorRect.centerX() - x;
-
-        showArrow(((onTop) ? ARROW_DOWN : ARROW_UP), arrowHorizontalPosition);
+        showArrow(((onTop) ? ARROW_DOWN : ARROW_UP), anchorRect.centerX() - x);
         popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y);
     }
 
@@ -312,6 +310,11 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     @SuppressWarnings("unused")
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setMaxHeightResource(int heightResource) {
+        int maxHeight = context.getResources().getDimensionPixelSize(heightResource);
+        popupWindow.setHeight(maxHeight);
     }
 
 }

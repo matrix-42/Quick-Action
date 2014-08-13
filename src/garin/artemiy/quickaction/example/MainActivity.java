@@ -23,12 +23,17 @@ public class MainActivity extends Activity {
 
         defaultQuickAction = new QuickAction(this, R.style.PopupAnimation, R.style.DefaultTextStyle,
                 R.drawable.icon_arrow_up, R.drawable.popup_background);
+        defaultQuickAction.setMaxHeightResource(R.dimen.popup_max_height);
 
         @SuppressLint("InflateParams") RelativeLayout customLayout =
                 (RelativeLayout) getLayoutInflater().inflate(R.layout.popup_custom_layout, null);
         customQuickAction = new QuickAction(this, R.style.PopupAnimation, R.drawable.icon_arrow_up,
                 R.drawable.popup_background, customLayout);
 
+        insertExampleData();
+    }
+
+    private void insertExampleData() {
         defaultQuickAction.addActionItem(new QuickActionItem(1, UUID.randomUUID().toString()));
         defaultQuickAction.addActionItem(new QuickActionItem(2, UUID.randomUUID().toString()));
         defaultQuickAction.addActionItem(new QuickActionItem(3, UUID.randomUUID().toString()));
@@ -39,6 +44,16 @@ public class MainActivity extends Activity {
         defaultQuickAction.addActionItem(new QuickActionItem(8, UUID.randomUUID().toString()));
         defaultQuickAction.addActionItem(new QuickActionItem(9, UUID.randomUUID().toString()));
         defaultQuickAction.addActionItem(new QuickActionItem(10, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(11, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(12, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(13, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(14, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(15, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(16, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(17, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(18, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(19, UUID.randomUUID().toString()));
+        defaultQuickAction.addActionItem(new QuickActionItem(20, UUID.randomUUID().toString()));
     }
 
     @SuppressWarnings("unused")
