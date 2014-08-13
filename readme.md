@@ -1,4 +1,4 @@
-<h3>Version — 1.0</h3>
+<h3>Version — 1.1</h3>
 <h3>Minimum SDK — 2.2+</h3>
 
 <h2>Screenshot</h2>
