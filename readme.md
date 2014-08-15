@@ -14,7 +14,8 @@ You may import src from project (need delete example folder) or <a href="https:/
         super.onCreate(savedInstanceState);
         ...
 
-        defaultQuickAction = new QuickAction(this, R.style.PopupAnimation, R.style.DefaultTextStyle,
+        defaultQuickAction = new QuickAction(this,
+                R.style.PopupAnimation, R.style.DefaultTextStyle,
                 R.drawable.icon_arrow_up, R.drawable.popup_background); // popup resources
 
         defaultQuickAction.addActionItem(new QuickActionItem(1, "Text")); // id and element title
@@ -35,7 +36,8 @@ View — anchor where popup will be showed. Example resources you can find <a hr
         RelativeLayout customLayout = (RelativeLayout) getLayoutInflater().
                 inflate(R.layout.popup_custom_layout, null);
 
-        customQuickAction = new QuickAction(this, R.style.PopupAnimation, R.drawable.icon_arrow_up,
+        customQuickAction = new QuickAction(this,
+                R.style.PopupAnimation, R.drawable.icon_arrow_up,
                 R.drawable.popup_background, customLayout);
     }
 ```
