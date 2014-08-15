@@ -72,6 +72,14 @@ In this case you also call **customQuickAction.show(view)**. XML example:
 
 **Important** part is set id, **android:id="@android:id/content"**, in this easy case, you also can set this id to TextView. And remove relative layout.
 
+<h2>Popup animation</h2>
+```java
+    <style name="PopupAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+```
+
 <h2>Listeners</h2>
 Use OnItemClickListener and OnDismissListener on QuickAction class. For example:
 
