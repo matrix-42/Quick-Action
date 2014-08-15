@@ -16,9 +16,9 @@ You may import src from project (need delete example folder) or <a href="https:/
 
         defaultQuickAction = new QuickAction(this,
                 R.style.PopupAnimation, R.style.DefaultTextStyle,
-                R.drawable.icon_arrow_up, R.drawable.popup_background); // popup resources
+                R.drawable.icon_arrow_up, R.drawable.popup_background);
 
-        defaultQuickAction.addActionItem(new QuickActionItem(1, "Text")); // id and element title
+        defaultQuickAction.addActionItem(new QuickActionItem(1, "Text")); // id, title
     }
 ```
 
