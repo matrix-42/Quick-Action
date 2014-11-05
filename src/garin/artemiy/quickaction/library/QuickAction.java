@@ -31,7 +31,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private RelativeLayout rootLayout;
 
     @SuppressWarnings("unused")
-    public QuickAction(Context context, int animationStyle, int arrowUpResource, RelativeLayout rootLayout) {
+    public QuickAction(Context context, int animationStyle, RelativeLayout rootLayout) {
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         this.context = context;
         this.rootLayout = rootLayout;
