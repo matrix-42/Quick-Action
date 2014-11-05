@@ -63,14 +63,16 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private void init(Context context, int animationStyle, int textAppearanceStyle,
                       int popupBackgroundResource, RelativeLayout rootLayout, int arrowUpResource) {
         this.context = context;
-        this.arrowUp = ((BitmapDrawable) context.getResources().getDrawable(arrowUpResource)).getBitmap();
-        this.arrowDown = rotateBitmap(DEGREES_180, arrowUp);
+        if (arrowUpResource != 0) {
+            this.arrowUp = ((BitmapDrawable) context.getResources().getDrawable(arrowUpResource)).getBitmap();
+            this.arrowDown = rotateBitmap(DEGREES_180, arrowUp);
+        }
         this.popupBackgroundResource = popupBackgroundResource;
         this.textAppearanceStyle = textAppearanceStyle;
 
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
-        initArrows();
+        if (arrowUpResource != 0) initArrows();
         initScreen();
 
         if (rootLayout == null) {
@@ -78,8 +80,10 @@ public class QuickAction implements PopupWindow.OnDismissListener {
             this.rootLayout = configureDefaultPopupView();
         } else {
             this.rootLayout = rootLayout;
-            this.rootLayout.addView(arrowUpImageView);
-            this.rootLayout.addView(arrowDownImageView);
+            if (arrowUpResource != 0) {
+                this.rootLayout.addView(arrowUpImageView);
+                this.rootLayout.addView(arrowDownImageView);
+            }
             rootLayout.setLayoutParams(new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -206,9 +210,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
             });
 
             contentLayout.addView(titleView);
-        } else {
-            throw new RuntimeException("You can't use custom view and default action item!");
-        }
+        } else throw new RuntimeException("You can't use custom view and default action item!");
     }
 
     public void show(View anchor) {
@@ -229,7 +231,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         int x = calculateHorizontalPosition(anchor, anchorRect, rootWidth, screenWidth);
         int y = calculateVerticalPosition(anchor, anchorRect, rootHeight, onTop, offsetTop, offsetBottom);
 
-        showArrow(((onTop) ? ARROW_DOWN : ARROW_UP), anchorRect.centerX() - x);
+        if (arrowUpImageView != null) showArrow(((onTop) ? ARROW_DOWN : ARROW_UP), anchorRect.centerX() - x);
         popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y);
     }
 
