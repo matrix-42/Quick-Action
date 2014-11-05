@@ -25,7 +25,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private int screenHeight;
 
     private OnDismissListener onDismissListener;
-
     private PopupWindow popupWindow;
     private WindowManager windowManager;
     private RelativeLayout rootLayout;
@@ -42,7 +41,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
 
     @SuppressWarnings("deprecation")
     private void initScreen() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             Display display = windowManager.getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
@@ -113,8 +112,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         return y;
     }
 
-    private int calculateHorizontalPosition(View anchor, Rect anchorRect, int rootWidth,
-                                            int screenWidth) {
+    private int calculateHorizontalPosition(View anchor, Rect anchorRect, int rootWidth, int screenWidth) {
         int x;
 
         if ((anchorRect.left + rootWidth) > screenWidth) {
