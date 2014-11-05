@@ -1,4 +1,4 @@
-package garin.artemiy.quickaction.library.listeners;
+package garin.artemiy.quickaction.library;
 
 /**
  * Author: Artemiy Garin

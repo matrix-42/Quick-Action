@@ -9,7 +9,6 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import garin.artemiy.quickaction.library.listeners.OnDismissListener;
 
 /**
  * Author: Artemiy Garin
