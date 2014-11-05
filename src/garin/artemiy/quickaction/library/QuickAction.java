@@ -1,12 +1,12 @@
 package garin.artemiy.quickaction.library;
 
 import android.content.Context;
-import android.graphics.*;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.view.*;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
@@ -16,18 +16,11 @@ import android.widget.RelativeLayout;
  */
 public class QuickAction implements PopupWindow.OnDismissListener {
 
-    private static final int ARROW_DOWN = 1;
-    private static final int ARROW_UP = 2;
-    private static final int CONTENT_VIEW = android.R.id.content;
-    private static final int DEGREES_180 = 180;
-
     private static final String PARAM_STATUS_BAR_HEIGHT = "status_bar_height";
     private static final String PARAM_DIMEN = "dimen";
     private static final String PARAM_ANDROID = "android";
 
     private Context context;
-    private Bitmap arrowDown;
-    private Bitmap arrowUp;
     private int screenWidth;
     private int screenHeight;
 
@@ -36,44 +29,15 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private PopupWindow popupWindow;
     private WindowManager windowManager;
     private RelativeLayout rootLayout;
-    private ImageView arrowUpImageView;
-    private ImageView arrowDownImageView;
 
     @SuppressWarnings("unused")
     public QuickAction(Context context, int animationStyle, int arrowUpResource, RelativeLayout rootLayout) {
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         this.context = context;
         this.rootLayout = rootLayout;
-        if (arrowUpResource != 0) { // todo: fix up arrow
-            this.arrowUp = ((BitmapDrawable) context.getResources().getDrawable(arrowUpResource)).getBitmap();
-            this.arrowDown = rotateBitmap(DEGREES_180, arrowUp);
-            initArrows();
-            this.rootLayout.addView(arrowUpImageView);
-            this.rootLayout.addView(arrowDownImageView);
-        }
 
         initScreen();
         initPopupWindow(animationStyle);
-    }
-
-    @SuppressWarnings("ResourceType")
-    private void initArrows() {
-        arrowDownImageView = new ImageView(context);
-        arrowDownImageView.setId(ARROW_DOWN);
-        arrowDownImageView.setImageBitmap(arrowDown);
-        RelativeLayout.LayoutParams arrowDownParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        arrowDownParams.addRule(RelativeLayout.BELOW, CONTENT_VIEW);
-        arrowDownImageView.setLayoutParams(arrowDownParams);
-
-        arrowUpImageView = new ImageView(context);
-        arrowUpImageView.setId(ARROW_UP);
-        arrowUpImageView.setImageBitmap(arrowUp);
-        RelativeLayout.LayoutParams arrowUpParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        arrowUpImageView.setLayoutParams(arrowUpParams);
     }
 
     @SuppressWarnings("deprecation")
@@ -134,7 +98,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         int x = calculateHorizontalPosition(anchor, anchorRect, rootWidth, screenWidth);
         int y = calculateVerticalPosition(anchorRect, rootHeight, onTop, offsetTop);
 
-        if (arrowUpImageView != null) showArrow(((onTop) ? ARROW_DOWN : ARROW_UP), anchorRect.centerX() - x);
         popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y);
     }
 
@@ -163,26 +126,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         }
 
         return x;
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private void showArrow(int arrowDirection, int horizontalPosition) {
-        View showArrow = (arrowDirection == ARROW_UP) ? arrowUpImageView : arrowDownImageView;
-        View hideArrow = (arrowDirection == ARROW_UP) ? arrowDownImageView : arrowUpImageView;
-        int arrowWidth = arrowUpImageView.getMeasuredWidth();
-
-        showArrow.setVisibility(View.VISIBLE);
-
-        ViewGroup.MarginLayoutParams arrowViewParams = (ViewGroup.MarginLayoutParams) showArrow.getLayoutParams();
-        arrowViewParams.leftMargin = horizontalPosition - arrowWidth / 2;
-
-        hideArrow.setVisibility(View.INVISIBLE);
-    }
-
-    public static Bitmap rotateBitmap(int rotate, Bitmap bitmap) {
-        Matrix matrix = new Matrix();
-        matrix.setRotate(rotate);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
     }
 
     private int getStatusBarHeight() {
