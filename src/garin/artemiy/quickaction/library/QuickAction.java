@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
  * Author: Artemiy Garin
  * Date: 21.04.14
  */
+@SuppressWarnings("unused")
 public class QuickAction implements PopupWindow.OnDismissListener {
 
     private static final String PARAM_STATUS_BAR_HEIGHT = "status_bar_height";
@@ -29,7 +30,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private WindowManager windowManager;
     private RelativeLayout rootLayout;
 
-    @SuppressWarnings("unused")
     public QuickAction(Context context, int animationStyle, RelativeLayout rootLayout) {
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         this.context = context;
