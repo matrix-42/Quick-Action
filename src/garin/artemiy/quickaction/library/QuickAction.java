@@ -6,9 +6,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.view.*;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import garin.artemiy.quickaction.library.listeners.OnDismissListener;
-import garin.artemiy.quickaction.library.listeners.OnItemClickListener;
 
 /**
  * Author: Artemiy Garin
@@ -24,71 +25,35 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     private static final String PARAM_STATUS_BAR_HEIGHT = "status_bar_height";
     private static final String PARAM_DIMEN = "dimen";
     private static final String PARAM_ANDROID = "android";
-    private static final float PADDING_DP = 4;
 
     private Context context;
     private Bitmap arrowDown;
     private Bitmap arrowUp;
     private int screenWidth;
     private int screenHeight;
-    private int popupBackgroundResource;
-    private int textAppearanceStyle;
-    private int padding;
 
     private OnDismissListener onDismissListener;
-    private OnItemClickListener onItemClickListener;
 
     private PopupWindow popupWindow;
     private WindowManager windowManager;
     private RelativeLayout rootLayout;
     private ImageView arrowUpImageView;
     private ImageView arrowDownImageView;
-    private LinearLayout contentLayout;
-    private ScrollView scrollView;
-    private boolean isUseDefaultView;
 
     @SuppressWarnings("unused")
-    public QuickAction(Context context, int animationStyle, int textAppearanceStyle, int arrowUpResource,
-                       int popupBackgroundResource) {
-        init(context, animationStyle, textAppearanceStyle, popupBackgroundResource, null, arrowUpResource);
-    }
-
-    @SuppressWarnings("unused")
-    public QuickAction(Context context, int animationStyle, int arrowUpResource,
-                       int popupBackgroundResource, RelativeLayout rootLayout) {
-        init(context, animationStyle, 0, popupBackgroundResource, rootLayout, arrowUpResource);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private void init(Context context, int animationStyle, int textAppearanceStyle,
-                      int popupBackgroundResource, RelativeLayout rootLayout, int arrowUpResource) {
+    public QuickAction(Context context, int animationStyle, int arrowUpResource, RelativeLayout rootLayout) {
+        windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         this.context = context;
-        if (arrowUpResource != 0) {
+        this.rootLayout = rootLayout;
+        if (arrowUpResource != 0) { // todo: fix up arrow
             this.arrowUp = ((BitmapDrawable) context.getResources().getDrawable(arrowUpResource)).getBitmap();
             this.arrowDown = rotateBitmap(DEGREES_180, arrowUp);
+            initArrows();
+            this.rootLayout.addView(arrowUpImageView);
+            this.rootLayout.addView(arrowDownImageView);
         }
-        this.popupBackgroundResource = popupBackgroundResource;
-        this.textAppearanceStyle = textAppearanceStyle;
 
-        windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-
-        if (arrowUpResource != 0) initArrows();
         initScreen();
-
-        if (rootLayout == null) {
-            this.padding = (int) (PADDING_DP * context.getResources().getDisplayMetrics().density);
-            this.rootLayout = configureDefaultPopupView();
-        } else {
-            this.rootLayout = rootLayout;
-            if (arrowUpResource != 0) {
-                this.rootLayout.addView(arrowUpImageView);
-                this.rootLayout.addView(arrowDownImageView);
-            }
-            rootLayout.setLayoutParams(new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
-        }
-
         initPopupWindow(animationStyle);
     }
 
@@ -106,9 +71,10 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         arrowUpImageView = new ImageView(context);
         arrowUpImageView.setId(ARROW_UP);
         arrowUpImageView.setImageBitmap(arrowUp);
-        arrowUpImageView.setLayoutParams(new RelativeLayout.LayoutParams(
+        RelativeLayout.LayoutParams arrowUpParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        arrowUpImageView.setLayoutParams(arrowUpParams);
     }
 
     @SuppressWarnings("deprecation")
@@ -141,76 +107,14 @@ public class QuickAction implements PopupWindow.OnDismissListener {
                 if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
                     popupWindow.dismiss();
                     return true;
-                }
-                return false;
+                } else return false;
             }
         });
     }
 
-    private RelativeLayout configureDefaultPopupView() {
-        isUseDefaultView = true;
-
-        RelativeLayout rootLayout = new RelativeLayout(context);
-        rootLayout.setLayoutParams(new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        rootLayout.setPadding(padding / 2, padding, padding / 2, padding);
-
-        contentLayout = new LinearLayout(context);
-        contentLayout.setOrientation(LinearLayout.VERTICAL);
-        contentLayout.setLayoutParams(new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        scrollView = new ScrollView(context);
-        scrollView.setId(CONTENT_VIEW);
-        RelativeLayout.LayoutParams scrollParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        scrollParams.addRule(RelativeLayout.BELOW, ARROW_UP);
-        scrollView.setLayoutParams(scrollParams);
-        scrollView.setBackgroundResource(popupBackgroundResource);
-
-        scrollView.addView(contentLayout);
-
-        rootLayout.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        rootLayout.addView(arrowUpImageView);
-        rootLayout.addView(scrollView);
-        rootLayout.addView(arrowDownImageView);
-
-        return rootLayout;
-    }
-
+    @SuppressWarnings("UnusedDeclaration")
     public void dismiss() {
         popupWindow.dismiss();
-    }
-
-    public void addActionItem(final QuickActionItem action) {
-        if (isUseDefaultView) {
-            TextView titleView = new TextView(context);
-            titleView.setText(action.getTitle());
-            titleView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-            titleView.setPadding(0, padding, 0, padding);
-            titleView.setClickable(true);
-            titleView.setTextAppearance(context, textAppearanceStyle);
-            titleView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onItemClickListener != null) onItemClickListener.onItemClick(action.getId());
-                }
-            });
-
-            contentLayout.addView(titleView);
-        } else throw new RuntimeException("You can't use custom view and default action item!");
     }
 
     public void show(View anchor) {
@@ -229,26 +133,20 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         boolean onTop = offsetTop > offsetBottom;
 
         int x = calculateHorizontalPosition(anchor, anchorRect, rootWidth, screenWidth);
-        int y = calculateVerticalPosition(anchor, anchorRect, rootHeight, onTop, offsetTop, offsetBottom);
+        int y = calculateVerticalPosition(anchorRect, rootHeight, onTop, offsetTop);
 
         if (arrowUpImageView != null) showArrow(((onTop) ? ARROW_DOWN : ARROW_UP), anchorRect.centerX() - x);
         popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y);
     }
 
     @SuppressWarnings("ConstantConditions")
-    private int calculateVerticalPosition(View anchor, Rect anchorRect, int rootHeight,
-                                          boolean onTop, int offsetTop, int offsetBottom) {
+    private int calculateVerticalPosition(Rect anchorRect, int rootHeight, boolean onTop, int offsetTop) {
         int y;
 
-        if (onTop)
-            if (rootHeight > offsetTop) {
-                scrollView.getLayoutParams().height = offsetTop - anchor.getHeight();
-                y = getStatusBarHeight();
-            } else y = anchorRect.top - rootHeight;
-        else {
-            y = anchorRect.bottom;
-            if (rootHeight > offsetBottom) scrollView.getLayoutParams().height = offsetBottom;
-        }
+        if (onTop) {
+            if (rootHeight > offsetTop) y = getStatusBarHeight();
+            else y = anchorRect.top - rootHeight;
+        } else y = anchorRect.bottom;
 
         return y;
     }
@@ -307,11 +205,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     @SuppressWarnings("unused")
     public void setOnDismissListener(OnDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
-    }
-
-    @SuppressWarnings("unused")
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
     }
 
     public void setMaxHeightResource(int heightResource) {
