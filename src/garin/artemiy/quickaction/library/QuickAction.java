@@ -41,7 +41,7 @@ public class QuickAction implements PopupWindow.OnDismissListener {
 
     @SuppressWarnings("deprecation")
     private void initScreen() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             Display display = windowManager.getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
