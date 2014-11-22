@@ -80,24 +80,30 @@ public class QuickAction implements PopupWindow.OnDismissListener {
     }
 
     public void show(View anchor) {
-        int[] location = new int[2];
-        anchor.getLocationOnScreen(location);
+        try {
+            int[] location = new int[2];
+            anchor.getLocationOnScreen(location);
 
-        Rect anchorRect = new Rect(location[0], location[1],
-                location[0] + anchor.getWidth(), location[1] + anchor.getHeight());
+            Rect anchorRect = new Rect(location[0], location[1],
+                    location[0] + anchor.getWidth(), location[1] + anchor.getHeight());
 
-        rootLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            if (rootLayout.getLayoutParams() == null) rootLayout.setLayoutParams(
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            rootLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
-        int rootHeight = rootLayout.getMeasuredHeight();
-        int rootWidth = rootLayout.getMeasuredWidth();
-        int offsetTop = anchorRect.top;
-        int offsetBottom = screenHeight - anchorRect.bottom;
-        boolean onTop = offsetTop > offsetBottom;
+            int rootHeight = rootLayout.getMeasuredHeight();
+            int rootWidth = rootLayout.getMeasuredWidth();
+            int offsetTop = anchorRect.top;
+            int offsetBottom = screenHeight - anchorRect.bottom;
+            boolean onTop = offsetTop > offsetBottom;
 
-        int x = calculateHorizontalPosition(anchor, anchorRect, rootWidth, screenWidth);
-        int y = calculateVerticalPosition(anchorRect, rootHeight, onTop, offsetTop);
+            int x = calculateHorizontalPosition(anchor, anchorRect, rootWidth, screenWidth);
+            int y = calculateVerticalPosition(anchorRect, rootHeight, onTop, offsetTop);
 
-        popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y);
+            popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
