@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
 
         @SuppressLint("InflateParams") RelativeLayout customLayout =
                 (RelativeLayout) getLayoutInflater().inflate(R.layout.popup_custom_layout, null);
-        customQuickAction = new QuickAction(this, R.style.PopupAnimation, customLayout);
+        customQuickAction = new QuickAction(this, R.style.PopupAnimation, customLayout, customLayout);
     }
 
     @SuppressWarnings("unused")

@@ -15,25 +15,29 @@ import android.widget.RelativeLayout;
  * Date: 21.04.14
  */
 @SuppressWarnings("unused")
-public class QuickAction implements PopupWindow.OnDismissListener {
+public class QuickAction {
 
     private static final String PARAM_STATUS_BAR_HEIGHT = "status_bar_height";
     private static final String PARAM_DIMEN = "dimen";
     private static final String PARAM_ANDROID = "android";
 
+    private static final int X_INDEX = 0;
+    private static final int Y_INDEX = 1;
+
     private Context context;
     private int screenWidth;
     private int screenHeight;
 
-    private OnDismissListener onDismissListener;
     private PopupWindow popupWindow;
     private WindowManager windowManager;
-    private RelativeLayout rootLayout;
+    private RelativeLayout topRootLayout;
+    private RelativeLayout bottomRootLayout;
 
-    public QuickAction(Context context, int animationStyle, RelativeLayout rootLayout) {
+    public QuickAction(Context context, int animationStyle, RelativeLayout topRootLayout, RelativeLayout bottomRootLayout) {
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         this.context = context;
-        this.rootLayout = rootLayout;
+        this.topRootLayout = topRootLayout;
+        this.bottomRootLayout = bottomRootLayout;
 
         initScreen();
         initPopupWindow(animationStyle);
@@ -60,7 +64,6 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(true);
-        popupWindow.setContentView(rootLayout);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupWindow.setAnimationStyle(animationStyle);
         popupWindow.setTouchInterceptor(new View.OnTouchListener() {
@@ -74,6 +77,11 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         });
     }
 
+    public void setMaxHeightResource(int heightResource) {
+        int maxHeight = context.getResources().getDimensionPixelSize(heightResource);
+        popupWindow.setHeight(maxHeight);
+    }
+
     @SuppressWarnings("UnusedDeclaration")
     public void dismiss() {
         popupWindow.dismiss();
@@ -84,8 +92,17 @@ public class QuickAction implements PopupWindow.OnDismissListener {
             int[] location = new int[2];
             anchor.getLocationOnScreen(location);
 
-            Rect anchorRect = new Rect(location[0], location[1],
-                    location[0] + anchor.getWidth(), location[1] + anchor.getHeight());
+            Rect anchorRect = new Rect(location[X_INDEX], location[Y_INDEX],
+                    location[X_INDEX] + anchor.getWidth(), location[Y_INDEX] + anchor.getHeight());
+
+            RelativeLayout rootLayout;
+            boolean onTop = false;
+            if (location[Y_INDEX] > screenHeight / 2)
+                rootLayout = bottomRootLayout;
+            else {
+                rootLayout = topRootLayout;
+                onTop = true;
+            }
 
             if (rootLayout.getLayoutParams() == null) rootLayout.setLayoutParams(
                     new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -93,29 +110,16 @@ public class QuickAction implements PopupWindow.OnDismissListener {
 
             int rootHeight = rootLayout.getMeasuredHeight();
             int rootWidth = rootLayout.getMeasuredWidth();
-            int offsetTop = anchorRect.top;
-            int offsetBottom = screenHeight - anchorRect.bottom;
-            boolean onTop = offsetTop > offsetBottom;
 
             int x = calculateHorizontalPosition(anchor, anchorRect, rootWidth, screenWidth);
-            int y = calculateVerticalPosition(anchorRect, rootHeight, onTop, offsetTop);
+            int y = calculateVerticalPosition(anchorRect, rootHeight, onTop);
 
+            popupWindow.setContentView(rootLayout);
+            popupWindow.dismiss();
             popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private int calculateVerticalPosition(Rect anchorRect, int rootHeight, boolean onTop, int offsetTop) {
-        int y;
-
-        if (onTop) {
-            if (rootHeight > offsetTop) y = getStatusBarHeight();
-            else y = anchorRect.top - rootHeight;
-        } else y = anchorRect.bottom;
-
-        return y;
     }
 
     private int calculateHorizontalPosition(View anchor, Rect anchorRect, int rootWidth, int screenWidth) {
@@ -132,30 +136,22 @@ public class QuickAction implements PopupWindow.OnDismissListener {
         return x;
     }
 
+    @SuppressWarnings("ConstantConditions")
+    private int calculateVerticalPosition(Rect anchorRect, int rootHeight, boolean onTop) {
+        int y;
+
+        if (onTop) y = anchorRect.top;
+        else y = anchorRect.bottom - rootHeight;
+
+        return y;
+    }
+
     private int getStatusBarHeight() {
         int result = 0;
         int resourceId = context.getResources().getIdentifier(PARAM_STATUS_BAR_HEIGHT, PARAM_DIMEN, PARAM_ANDROID);
         if (resourceId > 0) result = context.getResources().getDimensionPixelSize(resourceId);
 
         return result;
-    }
-
-    @Override
-    public void onDismiss() {
-        if (onDismissListener != null) onDismissListener.onDismiss();
-    }
-
-    /**
-     * Listeners
-     */
-    @SuppressWarnings("unused")
-    public void setOnDismissListener(OnDismissListener onDismissListener) {
-        this.onDismissListener = onDismissListener;
-    }
-
-    public void setMaxHeightResource(int heightResource) {
-        int maxHeight = context.getResources().getDimensionPixelSize(heightResource);
-        popupWindow.setHeight(maxHeight);
     }
 
 }
