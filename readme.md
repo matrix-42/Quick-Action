@@ -14,11 +14,11 @@ You may import src from project (need delete example folder) or <a href="https:/
          super.onCreate(savedInstanceState);
          setContentView(R.layout.activity_main_layout);
 
-      RelativeLayout customLayout = (RelativeLayout)
-          getLayoutInflater().inflate(R.layout.popup_custom_layout, null);
+         RelativeLayout customLayout = (RelativeLayout)
+             getLayoutInflater().inflate(R.layout.popup_custom_layout, null);
 
-     quickAction = new QuickAction
-         (this, R.style.PopupAnimation, customLayout, customLayout);
+         quickAction = new QuickAction
+             (this, R.style.PopupAnimation, customLayout, customLayout);
      }
 ```
 
