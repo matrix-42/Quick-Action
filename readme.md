@@ -18,7 +18,7 @@ You may import src from project (need delete example folder) or <a href="https:/
              getLayoutInflater().inflate(R.layout.popup_custom_layout, null);
 
          quickAction = new QuickAction
-             (this, R.style.PopupAnimation, customLayout, customLayout);
+             (this, R.style.PopupAnimation, customLayout, customLayout); // in this case, layout identical
      }
 ```
 
